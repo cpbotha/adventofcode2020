@@ -2,13 +2,14 @@
 # copyright 2020 by Charl P. Botha <info@charlbotha.com>
 # BSD 3-clause thanks
 
-# this is mostly a brute-force example
-# I did learn about seq slices creating new seqs (ouch)
+# this contains a brute force example, slight refinements to that
+# and then a slightly more clever approach with a hashset
+# I also learned about seq slices creating new seqs (ouch)
 # and how to work around this.
 
 {.experimental: "views".}
 
-import sequtils, strutils, times
+import sequtils, sets, strutils, times
 
 proc find_sum2020_product(nums: seq[int]): int =
   # double iteration through nums
@@ -78,6 +79,16 @@ proc find_3sum2020_product_skip_iterator(nums: seq[int]): int =
         if n0 + n1 + n2 == 2020:
           return n0 * n1 * n2
 
+# translated from Dylan Bridgeman's ruby, improved with hashset for membership check
+proc find_3sum2020_product_set(nums: seq[int]): int =
+  let s = toHashSet(nums)
+  for i0,n0 in nums.span(0,^1):
+    let target1 = 2020 - n0
+    if target1 < 0: continue
+    for i1,n1 in nums.span(i0,^1):
+      let target2 = target1 - n1
+      if target2 in s:
+        return n0*n1*target2
 
 let f = readFile("input.txt")
 # filterIt was required for last blank line which would break parseInt
@@ -130,8 +141,14 @@ echo (cpuTime() - t0) / float(numRuns), " slices"
 
 t0 = cpuTime()
 for i in 1..numRuns:
+  assert find_3sum2020_product_set(nums) == part2answer
+echo (cpuTime() - t0) / float(numRuns), " set"
+
+t0 = cpuTime()
+for i in 1..numRuns:
   assert find_3sum2020_product_brute(nums) == part2answer
 echo (cpuTime() - t0) / float(numRuns), " brute"
+
 
 #[
   - what clever peeps on reddit were doing was searching rather than just
