@@ -99,7 +99,8 @@ proc find_3sum2020_product_set(nums: seq[int]): int =
 #var nums = f.split("\n").filterIt(it != "").mapIt(parseInt it)
 # more streamlined, from https://www.reddit.com/r/adventofcode/comments/k4e4lm/2020_day_1_solutions/ge8g56f/
 var nums: seq[int] = readFile("input.txt").strip().splitLines().map(parseInt)
-#nums.sort()
+# see below, pre-sorting leads to sub microsecond times
+nums.sort()
 
 # "my" part 1 answer was 471019
 assert find_sum2020_product(nums) == 471019
