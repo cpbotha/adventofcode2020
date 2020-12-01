@@ -41,16 +41,6 @@ proc find_3sum2020_product_skip_indices(nums: seq[int]): int =
 # https://github.com/nim-lang/Nim/blob/version-1-4/lib/system.nim#L2542
 # see https://forum.nim-lang.org/t/6469 (discussion re view slices, and araq: "In an ideal world we would have made a[x..y] an alias for toOpenArray"
 # see https://nim-lang.github.io/Nim/manual_experimental.html#view-types for the experimental view types in 1.4
-# when I use toOpenArray, it is faster than brute, but still 2x slower than skip_v1 above
-proc find_3sum2020_product_skip_openarray(nums: seq[int]): int =
-  # double iteration through nums
-  # for index, element iteration see https://stackoverflow.com/a/48123056/532513
-  for i0, n0 in nums:
-    for i1, n1 in nums.toOpenArray(i0+1,nums.len-1): # ideally this would have been nums[i0+1..^1], but see above
-      for i2, n2 in nums.toOpenArray(i1+1,nums.len-1):
-        if n0 + n1 + n2 == 2020:
-          return n0 * n1 * n2
-
 proc find_3sum2020_product_skip_slices(nums: seq[int]): int =
   # double iteration through nums
   # for index, element iteration see https://stackoverflow.com/a/48123056/532513
@@ -60,11 +50,25 @@ proc find_3sum2020_product_skip_slices(nums: seq[int]): int =
         if n0 + n1 + n2 == 2020:
           return n0 * n1 * n2
 
+# when I use toOpenArray, it is faster than brute, but still 2x slower than skip_v1 above
+# in theory, this should be as fast as indices
+# see notes below: depending on the sequence in which I run, I get different results :)
+proc find_3sum2020_product_skip_openarray(nums: seq[int]): int =
+  # double iteration through nums
+  # for index, element iteration see https://stackoverflow.com/a/48123056/532513
+  for i0, n0 in nums:
+    for i1, n1 in nums.toOpenArray(i0+1,nums.len-1): # ideally this would have been nums[i0+1..^1], but see above
+      for i2, n2 in nums.toOpenArray(i1+1,nums.len-1):
+        if n0 + n1 + n2 == 2020:
+          return n0 * n1 * n2
+
+
 # adapted from https://forum.nim-lang.org/t/4582#28715
 # I'm yielding both index and value so that nim does not have to inject pair() itself
 iterator span[T](s: seq[T]; first: int, last: BackwardsIndex): (int,T) =
   for i in first..s.len - last.int: yield (i,s[i])
 
+# so this is even faster than the indices method
 proc find_3sum2020_product_skip_iterator(nums: seq[int]): int =
   for i0, n0 in nums:
     for i1, n1 in nums.span(i0+1,^1):
