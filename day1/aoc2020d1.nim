@@ -107,11 +107,13 @@ assert find_sum2020_product(nums) == 471019
 #[
   sample results of run compiled with nim c --gc:orc -d:release
 
-  0.00124368625 indices
-  0.0012070303 openarray
-  0.00100139834 span iter
-  0.002821317210000001 slices
-  0.00275412723 brute
+  0.00125404588 indices
+  0.00122946987 openarray
+  0.00102754719 span iter
+  0.00277622275 slices
+  0.0001423047200000005 set
+  0.002755975730000001 brute  
+
 ]#
 
 let numRuns = 100
