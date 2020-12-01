@@ -17,8 +17,8 @@ proc find_sum2020_product(nums: seq[int]): int =
       if n0 + n1 == 2020:
         return n0 * n1
 
-proc find_3sum2020_product(nums: seq[int]): int =
-  # double iteration through nums
+proc find_3sum2020_product_brute(nums: seq[int]): int =
+  # triple iteration through nums
   for n0 in nums:
     for n1 in nums:
       for n2 in nums:
@@ -29,7 +29,6 @@ proc find_3sum2020_product(nums: seq[int]): int =
 # we can of course skip the parts of that matrix we've already visited
 # with my input list of 200 random unsorted ints, this was 3x faster
 proc find_3sum2020_product_skip_indices(nums: seq[int]): int =
-  # double iteration through nums
   for i0 in 0..nums.len-1:
     let n0 = nums[i0]
     for i1 in i0+1..nums.len-1:
@@ -40,23 +39,22 @@ proc find_3sum2020_product_skip_indices(nums: seq[int]): int =
           return n0 * n1 * n2
 
 # you can rewrite the above more tersely as the following,
-# but now it's SLOWER than the non-skip
+# but now it's SLOWER than the non-skip brute
 # that's because those slices are returning new sequences every time:
 # https://github.com/nim-lang/Nim/blob/version-1-4/lib/system.nim#L2542
 # see https://forum.nim-lang.org/t/6469 (discussion re view slices, and araq: "In an ideal world we would have made a[x..y] an alias for toOpenArray"
 # see https://nim-lang.github.io/Nim/manual_experimental.html#view-types for the experimental view types in 1.4
 proc find_3sum2020_product_skip_slices(nums: seq[int]): int =
-  # double iteration through nums
-  # for index, element iteration see https://stackoverflow.com/a/48123056/532513
+  # for index, element iteration see https://stackoverflow.com/a/48123056/532513 (implicit pair()!)
   for i0, n0 in nums:
     for i1, n1 in nums[i0+1..^1]:
       for i2, n2 in nums[i1+1..^1]:
         if n0 + n1 + n2 == 2020:
           return n0 * n1 * n2
 
-# when I use toOpenArray, it is faster than brute, but still 2x slower than skip_v1 above
-# in theory, this should be as fast as indices
-# see notes below: depending on the sequence in which I run, I get different results :)
+# when I use toOpenArray, it is faster than skip_slices, but still 2x slower than skip_indices above
+# in theory, this should be as fast as indices!
+# no wait see notes below: depending on the sequence in which I run, this is == indices
 proc find_3sum2020_product_skip_openarray(nums: seq[int]): int =
   # double iteration through nums
   # for index, element iteration see https://stackoverflow.com/a/48123056/532513
@@ -88,8 +86,7 @@ let f = readFile("input.txt")
 let nums = f.strip().splitLines().map(parseInt)
 
 # "my" part 1 answer was 471019
-#echo find_sum2020_product(nums)
-# "my" part 2 answer was 103927824
+assert find_sum2020_product(nums) == 471019
 
 # with the benchmarks below:
 # if brute is at the start, indices is twice as fast as openarray
@@ -108,6 +105,7 @@ let nums = f.strip().splitLines().map(parseInt)
 
 let numRuns = 100
 var t0: float
+# "my" part 2 answer was 103927824
 let part2answer = 103927824
 
 t0 = cpuTime()
@@ -132,7 +130,7 @@ echo (cpuTime() - t0) / float(numRuns), " slices"
 
 t0 = cpuTime()
 for i in 1..numRuns:
-  assert find_3sum2020_product(nums) == part2answer
+  assert find_3sum2020_product_brute(nums) == part2answer
 echo (cpuTime() - t0) / float(numRuns), " brute"
 
 #[
