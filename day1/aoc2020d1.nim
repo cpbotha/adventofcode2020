@@ -90,30 +90,36 @@ let nums = f.strip().splitLines().map(parseInt)
 # with the benchmarks below:
 # if brute is at the start, indices is twice as fast as openarray
 # if brute is at the end, or not executed, indices and openarray are equally fast
+# furthermore, --gc:orc is a good chunk faster
 
 let numRuns = 100
 var t0: float
-
-
-t0 = cpuTime()
-for i in 1..numRuns:
-  discard find_3sum2020_product_skip_indices(nums)
-echo "indices: ", (cpuTime() - t0) / float(numRuns)
+let part2answer = 103927824
 
 t0 = cpuTime()
 for i in 1..numRuns:
-  discard find_3sum2020_product_skip_openarray(nums)
-echo "openarray: ", (cpuTime() - t0) / float(numRuns)
+  assert find_3sum2020_product_skip_indices(nums) == part2answer
+echo (cpuTime() - t0) / float(numRuns), " indices"
 
 t0 = cpuTime()
 for i in 1..numRuns:
-  discard find_3sum2020_product_skip_slices(nums)
-echo "slices: ", (cpuTime() - t0) / float(numRuns)
+  assert find_3sum2020_product_skip_openarray(nums) == part2answer
+echo (cpuTime() - t0) / float(numRuns), " openarray"
 
 t0 = cpuTime()
 for i in 1..numRuns:
-  discard find_3sum2020_product(nums)
-echo "brute: ", (cpuTime() - t0) / float(numRuns)
+  assert find_3sum2020_product_skip_iterator(nums) == part2answer
+echo (cpuTime() - t0) / float(numRuns), " span iter"
+
+t0 = cpuTime()
+for i in 1..numRuns:
+  assert find_3sum2020_product_skip_slices(nums) == part2answer
+echo (cpuTime() - t0) / float(numRuns), " slices"
+
+t0 = cpuTime()
+for i in 1..numRuns:
+  assert find_3sum2020_product(nums) == part2answer
+echo (cpuTime() - t0) / float(numRuns), " brute"
 
 #[
   - what clever peeps on reddit were doing was searching rather than just
