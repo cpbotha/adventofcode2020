@@ -53,6 +53,18 @@ proc find_3sum2020_product_skip_slices(nums: seq[int]): int =
         if n0 + n1 + n2 == 2020:
           return n0 * n1 * n2
 
+# adapted from https://forum.nim-lang.org/t/4582#28715
+# I'm yielding both index and value so that nim does not have to inject pair() itself
+iterator span[T](s: seq[T]; first: int, last: BackwardsIndex): (int,T) =
+  for i in first..s.len - last.int: yield (i,s[i])
+
+proc find_3sum2020_product_skip_iterator(nums: seq[int]): int =
+  for i0, n0 in nums:
+    for i1, n1 in nums.span(i0+1,^1):
+      for i2, n2 in nums.span(i1+1,^1):
+        if n0 + n1 + n2 == 2020:
+          return n0 * n1 * n2
+
 
 let f = readFile("input.txt")
 # filterIt was required for last blank line which would break parseInt
