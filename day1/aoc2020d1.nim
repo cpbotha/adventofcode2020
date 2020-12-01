@@ -1,3 +1,7 @@
+# AoC 2020 day 1 solution and experiments
+# copyright 2020 by Charl P. Botha <info@charlbotha.com>
+# BSD 3-clause thanks
+
 {.experimental: "views".}
 
 import sequtils, strutils, times
