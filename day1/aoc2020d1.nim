@@ -2,6 +2,10 @@
 # copyright 2020 by Charl P. Botha <info@charlbotha.com>
 # BSD 3-clause thanks
 
+# this is mostly a brute-force example
+# I did learn about seq slices creating new seqs (ouch)
+# and how to work around this.
+
 {.experimental: "views".}
 
 import sequtils, strutils, times
