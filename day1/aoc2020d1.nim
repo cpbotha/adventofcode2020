@@ -96,6 +96,16 @@ let nums = f.strip().splitLines().map(parseInt)
 # if brute is at the end, or not executed, indices and openarray are equally fast
 # furthermore, --gc:orc is a good chunk faster
 
+#[
+  sample results of run compiled with nim c --gc:orc -d:release
+
+  0.00124368625 indices
+  0.0012070303 openarray
+  0.00100139834 span iter
+  0.002821317210000001 slices
+  0.00275412723 brute
+]#
+
 let numRuns = 100
 var t0: float
 let part2answer = 103927824
