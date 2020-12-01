@@ -7,7 +7,11 @@
 # I also learned about seq slices creating new seqs (ouch)
 # and how to work around this.
 
-{.experimental: "views".}
+#{.experimental: "views".}
+# it seems this is not required for toOpenArray after all
+# with it activated, you'll run into:
+# algorithm.nim(328, 7) Error: attempt to mutate a borrowed location from an immutable view
+# when attempting the nums.sort()
 
 import sequtils, sets, strutils, times
 
