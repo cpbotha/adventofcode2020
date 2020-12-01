@@ -21,6 +21,9 @@ proc find_3sum2020_product(nums: seq[int]): int =
         if n0 + n1 + n2 == 2020:
           return n0 * n1 * n2
 
+# instead of just brute-forcing through the whole cartesian product,
+# we can of course skip the parts of that matrix we've already visited
+# with my input list of 200 random unsorted ints, this was 3x faster
 proc find_3sum2020_product_skip_indices(nums: seq[int]): int =
   # double iteration through nums
   for i0 in 0..nums.len-1:
