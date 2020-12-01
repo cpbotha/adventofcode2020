@@ -13,7 +13,7 @@
 # algorithm.nim(328, 7) Error: attempt to mutate a borrowed location from an immutable view
 # when attempting the nums.sort()
 
-import sequtils, sets, strutils, times
+import algorithm, sequtils, sets, strformat, strutils, times
 
 proc find_sum2020_product(nums: seq[int]): int =
   # double iteration through nums
@@ -60,6 +60,7 @@ proc find_3sum2020_product_skip_slices(nums: seq[int]): int =
 # when I use toOpenArray, it is faster than skip_slices, but still 2x slower than skip_indices above
 # in theory, this should be as fast as indices!
 # no wait see notes below: depending on the sequence in which I run, this is == indices
+# this toOpenArray seems to work even without experimental: views
 proc find_3sum2020_product_skip_openarray(nums: seq[int]): int =
   # double iteration through nums
   # for index, element iteration see https://stackoverflow.com/a/48123056/532513
@@ -94,11 +95,11 @@ proc find_3sum2020_product_set(nums: seq[int]): int =
       if target2 in s:
         return n0*n1*target2
 
-let f = readFile("input.txt")
 # filterIt was required for last blank line which would break parseInt
-#let nums = f.split("\n").filterIt(it != "").mapIt(parseInt it)
+#var nums = f.split("\n").filterIt(it != "").mapIt(parseInt it)
 # more streamlined, from https://www.reddit.com/r/adventofcode/comments/k4e4lm/2020_day_1_solutions/ge8g56f/
-let nums = f.strip().splitLines().map(parseInt)
+var nums: seq[int] = readFile("input.txt").strip().splitLines().map(parseInt)
+#nums.sort()
 
 # "my" part 1 answer was 471019
 assert find_sum2020_product(nums) == 471019
@@ -111,12 +112,25 @@ assert find_sum2020_product(nums) == 471019
 #[
   sample results of run compiled with nim c --gc:orc -d:release
 
-  0.00125404588 indices
-  0.00122946987 openarray
-  0.00102754719 span iter
-  0.00277622275 slices
-  0.0001423047200000005 set
-  0.002755975730000001 brute  
+  1 µs is of course 1e-6 s
+
+  without pre-sorting the input numbers:
+
+  902.131 µs  indices
+  1204.790 µs  openarray
+  997.015 µs  span iter
+  2734.433 µs  slices
+  153.432 µs  set
+  2734.677 µs  brute    
+
+  with pre-sorting the input numbers:
+
+  0.735 µs  indices
+  0.451 µs  openarray
+  0.493 µs  span iter
+  1.330 µs  slices
+  2.880 µs  set
+  0.884 µs  brute
 
 ]#
 
@@ -125,35 +139,38 @@ var t0: float
 # "my" part 2 answer was 103927824
 let part2answer = 103927824
 
+proc durdisp(t0, t1: float): string =
+  &"{(cpuTime() - t0) / float(numRuns) * 1e6:3.3f} µs"
+
 t0 = cpuTime()
 for i in 1..numRuns:
   assert find_3sum2020_product_skip_indices(nums) == part2answer
-echo (cpuTime() - t0) / float(numRuns), " indices"
+echo &"{durdisp(t0, cpuTime())}  indices"
 
 t0 = cpuTime()
 for i in 1..numRuns:
   assert find_3sum2020_product_skip_openarray(nums) == part2answer
-echo (cpuTime() - t0) / float(numRuns), " openarray"
+echo &"{durdisp(t0, cpuTime())}  openarray"  
 
 t0 = cpuTime()
 for i in 1..numRuns:
   assert find_3sum2020_product_skip_iterator(nums) == part2answer
-echo (cpuTime() - t0) / float(numRuns), " span iter"
+echo &"{durdisp(t0, cpuTime())}  span iter"  
 
 t0 = cpuTime()
 for i in 1..numRuns:
   assert find_3sum2020_product_skip_slices(nums) == part2answer
-echo (cpuTime() - t0) / float(numRuns), " slices"
+echo &"{durdisp(t0, cpuTime())}  slices"
 
 t0 = cpuTime()
 for i in 1..numRuns:
   assert find_3sum2020_product_set(nums) == part2answer
-echo (cpuTime() - t0) / float(numRuns), " set"
+echo &"{durdisp(t0, cpuTime())}  set"
 
 t0 = cpuTime()
 for i in 1..numRuns:
   assert find_3sum2020_product_brute(nums) == part2answer
-echo (cpuTime() - t0) / float(numRuns), " brute"
+echo &"{durdisp(t0, cpuTime())}  brute"  
 
 
 #[
