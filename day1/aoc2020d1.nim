@@ -13,7 +13,7 @@
 # algorithm.nim(328, 7) Error: attempt to mutate a borrowed location from an immutable view
 # when attempting the nums.sort()
 
-import algorithm, sequtils, sets, strformat, strutils, times
+import algorithm, os, sequtils, sets, strformat, strutils, times
 
 proc find_sum2020_product(nums: seq[int]): int =
   # double iteration through nums
@@ -98,7 +98,7 @@ proc find_3sum2020_product_set(nums: seq[int]): int =
 # filterIt was required for last blank line which would break parseInt
 #var nums = f.split("\n").filterIt(it != "").mapIt(parseInt it)
 # more streamlined, from https://www.reddit.com/r/adventofcode/comments/k4e4lm/2020_day_1_solutions/ge8g56f/
-var nums: seq[int] = readFile("input.txt").strip().splitLines().map(parseInt)
+var nums: seq[int] = readFile(joinPath(getAppDir(),"input.txt")).strip().splitLines().map(parseInt)
 # see below, pre-sorting leads to sub microsecond times
 nums.sort()
 
