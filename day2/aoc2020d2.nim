@@ -13,16 +13,35 @@ proc checkPP(pp: string): bool =
     else:
         raise newException(ValueError, "could not parse pp")
 
+proc checkPP_p2(pp: string): bool =
+    var p1, p2: int
+    var thechar, pass: string
+    if scanf(pp, "$i-$i $w: $w", p1, p2, thechar, pass):
+        var numMatches = 0
+        if pass[p1-1] == thechar[0]: numMatches += 1
+        if pass[p2-1] == thechar[0]: numMatches += 1
+        return numMatches == 1
+
+    else:
+        raise newException(ValueError, "could not parse pp")
+
+
 
 # pps = policy and password lines
 # e.g. 1-3 a: abcde
 # at least 1 x a, at most 3 x a
 let pps = readFile(joinPath(getAppDir(),"input.txt")).strip().splitLines()
 
-var valids = 0
+var valids_p1 = 0
+var valids_p2 = 0
 for pp in pps:
     if checkPP(pp):
-        valids += 1
+        valids_p1 += 1
 
-echo valids
-    
+    if checkPP_p2(pp):
+        valids_p2 += 1
+
+
+echo "p1: ", valids_p1
+echo "p2: ", valids_p2
+
