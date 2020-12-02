@@ -8,7 +8,7 @@
 
 # as a nim newbie, impressed this time by: scanf, CountTable
 
-import os, strscans, strutils, tables
+import os, sequtils, strscans, strutils, tables
 
 proc checkPP(pp: string): bool =
   var min, max: int
@@ -21,7 +21,6 @@ proc checkPP(pp: string): bool =
     let freqs = toCountTable(pass)
     let freq = freqs[thechar[0]]
     return min <= freq and freq <= max
-
   else:
     raise newException(ValueError, "could not parse pp")
 
@@ -29,11 +28,9 @@ proc checkPP_p2(pp: string): bool =
   var p1, p2: int
   var thechar, pass: string
   if scanf(pp, "$i-$i $w: $w", p1, p2, thechar, pass):
-    var numMatches = 0
-    if pass[p1-1] == thechar[0]: numMatches += 1
-    if pass[p2-1] == thechar[0]: numMatches += 1
-    return numMatches == 1
-
+    # for submitted solution, had counter variable, but this is simpler
+    # one could also stick p1,p2 in an array, then .map() to do the below
+    return count(@[pass[p1-1] == thechar[0], pass[p2-1] == thechar[0]], true) == 1
   else:
     raise newException(ValueError, "could not parse pp")
 
@@ -50,6 +47,7 @@ for pp in pps:
     valids_p2 += 1
 
 
+# should be 460
 echo "p1: ", valids_p1
+# should be 251
 echo "p2: ", valids_p2
-
