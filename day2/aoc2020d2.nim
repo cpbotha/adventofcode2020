@@ -24,13 +24,17 @@ proc checkPP(pp: string): bool =
   else:
     raise newException(ValueError, "could not parse pp")
 
-proc checkPP_p2(pp: string): bool =
-  var p1, p2: int
+proc checkPP_p2(pp: string): bool =  
+  # this will get the p1-p2 positions
+  var ps: array[0..1, int]
+  # and this the character that should be checked, and then the actual pass
   var thechar, pass: string
-  if scanf(pp, "$i-$i $w: $w", p1, p2, thechar, pass):
-    # for submitted solution, had counter variable, but this is simpler
-    # one could also stick p1,p2 in an array, then .map() to do the below
-    return count(@[pass[p1-1] == thechar[0], pass[p2-1] == thechar[0]], true) == 1
+  if scanf(pp, "$i-$i $w: $w", ps[0], ps[1], thechar, pass):
+    # for submitted solution, had counter variable, after that iterated to make more compact
+    # this solution is most compact
+    return count(ps.mapIt(pass[it-1] == thechar[0]), true) == 1
+    # but perhaps this was a better compromise between compact and readable:
+    # return count(@[pass[p1-1] == thechar[0], pass[p2-1] == thechar[0]], true) == 1
   else:
     raise newException(ValueError, "could not parse pp")
 
