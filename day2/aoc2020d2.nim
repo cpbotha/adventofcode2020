@@ -6,13 +6,15 @@
 # that's 43 minutes with a whole bunch of home front interruptions,
 # and welcoming guests into my home office
 
-# impressed by: scanf, CountTable,
+# as a nim newbie, impressed this time by: scanf, CountTable
 
 import os, strscans, strutils, tables
 
 proc checkPP(pp: string): bool =
     var min, max: int
     var thechar, pass: string
+    # e.g. 1-3 a: abcde
+    # at least 1 x a, at most 3 x a
     if scanf(pp, "$i-$i $w: $w", min, max, thechar, pass):
         # https://nim-lang.org/docs/tables.html#basic-usage-counttable
         # we just count them all, you never know what's going to happen in part 2
@@ -36,8 +38,6 @@ proc checkPP_p2(pp: string): bool =
         raise newException(ValueError, "could not parse pp")
 
 # pps = policy and password lines
-# e.g. 1-3 a: abcde
-# at least 1 x a, at most 3 x a
 let pps = readFile(joinPath(getAppDir(),"input.txt")).strip().splitLines()
 
 var valids_p1 = 0
