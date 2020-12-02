@@ -1,4 +1,14 @@
-import algorithm, os, sequtils, sets, strformat, strscans, strutils, tables, times
+# AoC 2020 day 2 solution
+# copyright 2020 by Charl P. Botha <info@charlbotha.com>
+# BSD 3-clause thanks
+
+# according to dropbox, started at 08:06, finished at 08:49.
+# that's 43 minutes with a whole bunch of home front interruptions,
+# and welcoming guests into my home office
+
+# impressed by: scanf, CountTable,
+
+import os, strscans, strutils, tables
 
 proc checkPP(pp: string): bool =
     var min, max: int
@@ -24,8 +34,6 @@ proc checkPP_p2(pp: string): bool =
 
     else:
         raise newException(ValueError, "could not parse pp")
-
-
 
 # pps = policy and password lines
 # e.g. 1-3 a: abcde
