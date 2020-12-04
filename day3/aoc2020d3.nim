@@ -32,5 +32,6 @@ proc countTrees(dx, dy: int): int =
     if col >= lineLen:
       col = col - lineLen
 
+# 3316272960
 echo countTrees(1,1) * countTrees(3,1) * countTrees(5,1) * countTrees(7,1) * countTrees(1,2)
 
