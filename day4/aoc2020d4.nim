@@ -4,7 +4,12 @@
 
 # was out of the day today; could only start this in the evening
 
-import os, re, sets, strscans, strutils, tables
+# learned the lesson that re.match() by default does not mean to capture the whole input string
+# iow, match("abcde", "abcd") will return true
+# in my set, there were two pids with >9 digits. Enclosing re with ^ and $ fixed this.
+# my bad, good lesson!
+
+import os, re, sets, strformat, strscans, strutils, tables
 
 # in this case DON'T strip, because we want that last empty line to trigger end of last passport
 # my set check was wrong (< instead of <=); could fortunately debug with the demo set they gave!
@@ -19,22 +24,26 @@ proc checkPassRequiredFields(fields: seq[string]): bool =
 
 let validEcl = toHashSet(["amb", "blu", "brn", "gry", "grn", "hzl", "oth"])
 
-proc checkPassValidValues(pass: TableRef[string,string]): bool =
+proc checkYearStr(yrstr: string, min, max: int): bool =
   result = true
+  if yrstr.len != 4:
+    return false
+  let year = parseInt(yrstr)
+  if year < min or year > max:
+    result = false
+
+proc checkPassValidValues(pass: TableRef[string,string]): bool =
   for key in pass.keys():
     if key == "byr":
-      let byr = parseInt(pass[key])
-      if byr < 1920 or byr > 2002:
+      if not checkYearStr(pass[key], 1920, 2002):
         return false
 
     elif key == "iyr":
-      let iyr = parseInt(pass[key])
-      if iyr < 2010 or iyr > 2020:
+      if not checkYearStr(pass[key], 2010, 2020):
         return false
 
     elif key == "eyr":
-      let eyr = parseInt(pass[key])
-      if eyr < 2020 or eyr > 2030:
+      if not checkYearStr(pass[key], 2020, 2030):
         return false
 
     elif key == "hgt":
@@ -52,7 +61,9 @@ proc checkPassValidValues(pass: TableRef[string,string]): bool =
         return false
 
     elif key == "hcl":
-      if not match(pass[key], re"#[0-9a-f]{6}"):
+      if not match(pass[key], re"^#[0-9a-f]{6}$"):
+        if match(pass[key], re"#[0-9a-f]{6}"):
+          echo "hcl would have been OK ", pass[key]
         return false
 
     elif key == "ecl":
@@ -60,8 +71,13 @@ proc checkPassValidValues(pass: TableRef[string,string]): bool =
         return false
 
     elif key == "pid":
-      if not match(pass[key], re"[0-9]{9}"):
+      # 
+      if not match(pass[key], re"^[0-9]{9}$"):
+        if match(pass[key], re"[0-9]{9}"):
+          echo &"pid would have been OK |{pass[key]}|"
         return false
+
+  result = true
 
 # parse out key:value pairs separated by spaces
 # empty line separates passports
@@ -80,15 +96,13 @@ for line in lines:
       if checkPassValidValues(thisPass):
         validPasses += 1
 
-    echo thisPass
-
     # start new passport
     # (unify with init code before the for loop)
     thisPassFields = @[]
     thisPass = newTable[string,string]()
 
   else:
-    let terms = line.strip().split(" ")
+    let terms = line.split(" ")
 
     for term in terms:
       let keyVal = term.split(":")
