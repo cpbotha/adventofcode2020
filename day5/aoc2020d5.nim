@@ -12,6 +12,12 @@
 # = 44
 # haha nice
 
+# 128 rows and 8 columns of seats on the plane
+# seats on very front and very back are also missing
+# my seat is missing
+# "the seats with IDs +1 and -1 from yours will be in your list"
+# what is my seatId? == find gaps in ID
+
 import os, sequtils, strformat, strscans, strutils, tables
 
 let lines = readFile(joinPath(getAppDir(), "input.txt")).strip().splitLines()
@@ -37,13 +43,31 @@ proc calcSeatId(seatSpec: string): int =
 
 assert calcSeatId("FBFBBFFRLR") == 357
 
+var occ = initCounttable[int]()
 var maxId = -1
 for line in lines:
   let seatId = calcSeatId(line)
+  # track maxId for checksum
   if seatId > maxId:
     maxId = seatId
 
-echo maxId
+  # record that this seat is present
+  occ.inc(seatId)
+
+echo "maxid ", maxId
+
+# now find holes in occ
+for row in 0..127:
+  for col in 0..7:
+    let seatId = row*8+col
+    if occ[seatId] == 0:
+      echo &"{row} -- {col} -- {seatId}"
+
+# there were a whole bunch of holes. it was clear however that the hole on row
+# 72 col 3 seatId 579 was isolated, and hence mine
+
+# I could have iterated through 0..maxSeatId; if curId not in list, but -1 and 1 are, there we are
+
 
 
 
