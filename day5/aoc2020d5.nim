@@ -67,6 +67,11 @@ for row in 0..127:
 # 72 col 3 seatId 579 was isolated, and hence mine
 
 # I could have iterated through 0..maxSeatId; if curId not in list, but -1 and 1 are, there we are
+# in other words:
+for seatId in 0..maxId:
+  if seatId notin occ and seatId-1 in occ and seatId+1 in occ:
+    echo &"your seatId could be {seatId}"
+
 
 
 
