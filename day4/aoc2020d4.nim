@@ -9,6 +9,10 @@
 # in my set, there were two pids with >9 digits. Enclosing re with ^ and $ fixed this.
 # my bad, good lesson!
 
+# after having looked at other solutions:
+# dispatch via fieldname -> lambda validity check (in nim table with => sugar anonymous procs?)
+# validity checks are 100% re, each a one-liner (the same with nim)
+
 import os, re, sets, strformat, strscans, strutils, tables
 
 # in this case DON'T strip, because we want that last empty line to trigger end of last passport
