@@ -2,10 +2,11 @@
 # copyright 2020 by Charl P. Botha <info@charlbotha.com>
 # BSD 3-clause thanks
 
-# New nim-tricks I leanned today:
+# interesting nim-tricks for this newbie today:
 # - re"^$" is short for re("^$), but you need second form to add set of regex options
+# - CountTable and sequtils super useful
 
-import os, sets, strutils, tables
+import os, sequtils, sets, strutils, tables
 
 # this time I'm simply splitting the input directly into groups
 # instead of doing per-line parsing and grouping as with day 4.
@@ -20,6 +21,7 @@ let lines = readFile(joinPath(getAppDir(), "input.txt")).strip().split("\n\n")
 
 var totalYesCount = 0
 var totalAllYesCount = 0
+var totalAllYesCountV2 = 0
 for group in lines:
   # "group" is now e.g.: nsi\nvlsgi\nins\nsi\n (i.e. after we split file on empty lines)
   let persons = group.strip().split()
@@ -29,11 +31,17 @@ for group in lines:
   totalYesCount += persons.join("").toHashSet().len
 
   # part 2: to which questions did ALL persons in group answer yes?
-  let numPersons = persons.len
+  # part 2, alternative 1: 
   let count = persons.join("").toCountTable
   for k in count.keys():
-    if count[k] == numPersons:
+    if count[k] == persons.len:
       totalAllYesCount += 1
+
+  # part 2, alternative 2 more compact
+  # each new count CountTable has counts for each answer as given by members of the group
+  # for each unique answer, we tally up how often ALL members of the group gave that answer
+  totalAllYescountV2 += toSeq(count.values).count(persons.len)
 
 assert totalYesCount == 7128
 assert totalAllYesCount == 3640
+assert totalAllYesCountV2 == totalAllYesCount
