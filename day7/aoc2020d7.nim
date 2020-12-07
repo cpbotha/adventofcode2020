@@ -1,12 +1,12 @@
-import os, re, sequtils, sets, strformat, strutils, tables
+import os, re, sequtils, sets, strformat, strscans, strutils, tables
 
 let lines = readFile(joinPath(getAppDir(), "input.txt")).strip().split("\n")
 let re1 = re("^(.*) bags contain (.*)\\.")
 
-# for each unique colour, which other colours can contain it (part 1)
+# for each unique colour, which other colours can directly contain it (part 1)
 var containedBy = newTable[string, HashSet[string]]()
 
-# for each unique colour, map to a list of name, numbers that it contains (part 2)
+# for each unique colour, map to a list of name, numbers that it directly contains (part 2)
 var containers = newTable[string, seq[(string, int)]]()
 
 for line in lines:
@@ -20,9 +20,9 @@ for line in lines:
     if groups[1].strip() != "no other bags":
       containers[groups[0]] = @[]
 
-      # strip bag(s) from end
+      # strip bag(s) from end of each contained bag spec
       for cc in groups[1].split(", ").mapIt(it.split(" bag")[0]):
-        # cc = 3 dark maroon bags
+        # cc = "3 dark maroon"
         let numThenColour = cc.split(" ", maxSplit=1)
         let num = parseInt(numThenColour[0].strip())
         let containedColour = numThenColour[1].strip()
