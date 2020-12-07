@@ -1,3 +1,10 @@
+# AoC 2020 day 7 solution
+# copyright 2020 by Charl P. Botha <info@charlbotha.com>
+# BSD 3-clause thanks
+
+# new nim tricks I learned during this puzzle:
+# - foldl(a+b)
+
 import os, re, sequtils, sets, strformat, strscans, strutils, tables
 
 let lines = readFile(joinPath(getAppDir(), "input.txt")).strip().split("\n")
