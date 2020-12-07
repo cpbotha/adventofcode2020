@@ -13,6 +13,21 @@
 # part 1 is simply finding all paths terminating in the contained colour
 # part 2 is traversing graph from shiny gold leaf
 
+# found this nice explanation on reddit later:
+# https://www.reddit.com/r/adventofcode/comments/k8a31f/2020_day_07_solutions/gexnf1d/?context=3
+# Problem is a Directed Weighted Graph (possibly Acyclic but I didn't want to make that assumption).
+
+# Part 0: Processing the input and creating a graph in adjacency list and
+# adjacency matrix form :) A fun challenge for me in C++.
+
+# Part 1: Reverse the Directed Graph (reverse the weighted edges) and traverse
+# with DFS/BFS starting from the interested node ("shiny gold"). Count the
+# vertices that this traversal hits (except the starting one).
+
+# Part 2: DFS/BFS on the original Directed Graph, starting from the interested
+# node ("shiny gold"), keeping a rolling multiplying count based on the weights
+# (number of bags) on the edges of the neighbors.
+
 import os, re, sequtils, sets, strformat, strscans, strutils, tables
 
 let lines = readFile(joinPath(getAppDir(), "input.txt")).strip().split("\n")
