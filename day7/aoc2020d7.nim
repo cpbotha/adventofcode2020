@@ -5,6 +5,14 @@
 # new nim tricks I learned during this puzzle:
 # - foldl(a+b)
 
+# this took me longer than I would have liked :)
+
+# later in the day:
+# Next time I would like to try storing all the rules as a graph,
+# with edge weights the multiplier into a colour node.
+# part 1 is simply finding all paths terminating in the contained colour
+# part 2 is traversing graph from shiny gold leaf
+
 import os, re, sequtils, sets, strformat, strscans, strutils, tables
 
 let lines = readFile(joinPath(getAppDir(), "input.txt")).strip().split("\n")
