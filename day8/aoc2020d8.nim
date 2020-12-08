@@ -62,7 +62,8 @@ for idx, line in lines:
       break
 
     except ValueError:
-      echo "error running program"
+      let e = getCurrentExceptionMsg()
+      echo &"Error executing program: {e}"
 
     # change back
     if changedJmpOrNop == 1:
