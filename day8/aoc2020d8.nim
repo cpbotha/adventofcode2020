@@ -5,10 +5,16 @@
 # started part 1 at 8:25 solved at 8:40
 # part 2 finished at 9:08
 
+# this was great fun
+# new nim-lang things I (newbie) learned here
+# - nim try..except (no else?)
+# - how to get exception in except clause
+
 import os, re, sequtils, sets, strformat, strscans, strutils, tables
 
 var lines = readFile(joinPath(getAppDir(), "input.txt")).strip().split("\n")
 
+# this will only return acc when the end of the program was successfully reached
 proc runProg(): int =
   var acc = 0
   var ip = 0
@@ -44,7 +50,12 @@ proc runProg(): int =
   echo &"End of program with ip={ip}/{lines.len} acc={acc}"
   return acc
 
+# part 1 ----- detect the loop
+# with my data: Loop detected ip=479 acc=1818 instruction=nop +57
+# discard runProg()
 
+# part 2 ----- replace a single jmp with nop, or nop with jmp, to get program to execute until end
+# TODO: implement changes as a Table with op_src, op_dest. Would scale with any number of patches.
 var accFinal: int = -1
 for idx, line in lines:
   var changedJmpOrNop = 0
@@ -70,3 +81,5 @@ for idx, line in lines:
       lines[idx] = line.replace("nop", "jmp")
     else:
       lines[idx] = line.replace("jmp", "nop")
+
+assert accFinal == 631
