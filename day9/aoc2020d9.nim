@@ -1,4 +1,15 @@
-import os, re, sequtils, sets, strformat, strscans, strutils, tables
+# AoC 2020 day 8 solution
+# copyright 2020 by Charl P. Botha <info@charlbotha.com>
+# BSD 3-clause thanks
+
+# fun, mostly brute-force index twiddling solution
+
+# new nim that I (newbie) learned about:
+# - I did not use this, but you can have "block" statements, and then "break"
+#   out of that named block, see
+#   https://nim-lang.org/docs/tut1.html#control-flow-statements-break-statement
+
+import os, sequtils, strutils
 
 let preambleLen = 25
 let windowLen = preambleLen
@@ -41,6 +52,7 @@ proc findMinMaxOfContigSum(): int =
 
       if sum == part1num:
         # this means everything from idx..i
+        # this slice is a deep copy, but we're only doing it once
         let contig = nums[idx..i]
         return contig.min() + contig.max()
 
