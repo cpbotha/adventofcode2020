@@ -48,7 +48,7 @@ proc runProg(): int =
 
   # this means that ip went outside of the program, hopefully after end
   echo &"End of program with ip={ip}/{lines.len} acc={acc}"
-  return acc
+  result = acc
 
 # part 1 ----- detect the loop
 # with my data: Loop detected ip=479 acc=1818 instruction=nop +57
