@@ -58,7 +58,11 @@ proc part1(): int =
 
 #assert part1() == 2450
 
+var cache = initTable[HashSet[int], bool]()
 proc checkValidSequence(excludedIndices: HashSet[int]): bool =
+  if excludedIndices in cache:
+    return cache[excludedIndices]
+
   var curVoltage = 0
   for idx, a in adapterOutputs:
     if idx in excludedIndices:
@@ -67,34 +71,37 @@ proc checkValidSequence(excludedIndices: HashSet[int]): bool =
     if diff >= 1 and diff <= 3:
       curVoltage += diff
     else:
+      # invalid break in chain, early out
       return false
 
-  return curVoltage + 3 == deviceJoltage
+  result = curVoltage + 3 == deviceJoltage
+  cache[excludedIndices] = result
 
 # we start with a working sequence, we know this from part 1
 var numSolutions = 1
 
 proc walkTreeBT(excluded: HashSet[int] = initHashSet[int]()): int =
-  # TODO: for new branches to the right, you don't have to check any of the candidates to their left
   var start = 0
   if excluded.len > 0:
     start = excluded.toSeq().max()
 
   for idx in start..adapterOutputs.len-1:
     # only echo progress on the outermost loop
-
     if excluded.len == 0: echo "==========> outside loop ", idx
-    elif excluded.len <= 3: echo "exploring ", excluded
 
     if idx in excluded:
       # already excluded, so try and find another adapter to exclude
       continue
-    
+
     # remove the candidate adapter
     let newBranch = excluded + toHashSet(@[idx])
+
+    if newBranch.len > 0 and newBranch.len <= 3: echo "exploring ", newBranch
+
     if checkValidSequence(newBranch):
       # valid solution
       numSolutions += 1
+      #echo "total ", numSolutions, " solutions with ", newBranch
       # we need to continue down there
       discard walkTreeBT(newBranch)
 
