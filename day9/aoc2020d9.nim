@@ -1,4 +1,4 @@
-# AoC 2020 day 8 solution
+# AoC 2020 day 9 solution
 # copyright 2020 by Charl P. Botha <info@charlbotha.com>
 # BSD 3-clause thanks
 
