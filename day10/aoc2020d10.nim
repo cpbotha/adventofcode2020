@@ -6,6 +6,12 @@
 # - part 2: I could not get my backtracking to work on the full data. Gave up,
 #   started looking at other people's solutions.
 
+# next time:
+# - try to sketch out the toy dataset and its deltas
+# - then go through seeing what happens when you remove adapters
+# - try to notice how the sub-solutions (windows of three adapters before the
+#   current) accumulate into the total solution
+
 # p1
 # - input file has rated output joltages of adapters
 # - each adapter can take input 1,2 or 3 jolts lower than its output
@@ -27,15 +33,12 @@
 # - for each branch, remove that adapter
 #   - go through the set with the branch removed, for each OTHER adapter that can be removed, make a new branch
 # - when done building the graph, count the nodes
-# start at level 0, the whole set. level 1 is a seq of hashsets, where each hashset contains only the removed adapter idx
-# level 2 is a seq of hashsets, but here the hashsets have two elements, and so on.
 
 # part 2 solutions from reddit https://www.reddit.com/r/adventofcode/comments/ka8z8x/2020_day_10_solutions/
 # - dynamic programming, which is super fast, and is quite generic
 # - peeps recognizing that sequences of joltage difference 1 result in specific
 #   numbers of permutations for that sub-sequence
 # - tribonacci
-
 
 import algorithm, os, sequtils, sets, strformat, strutils, tables
 
@@ -135,6 +138,8 @@ proc solveB(adapters: seq[int]): int =
        # for each of the previous solutions dp[j] this is a valid new solution, so accumulate
        for j in max(0, i-3)..i-1:
            if x - adapters[j] <= 3:
+               # every valid short link to where I am now, means that all of the paths up to here
+               # can be extended
                acc += dp[j]
        
        # when done accumulating, record for the next step
