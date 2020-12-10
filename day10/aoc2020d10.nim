@@ -4,11 +4,13 @@
 
 # - start part 1 at 08:04, completed at around 08:25
 # - part 2: I could not get my backtracking to work on the full data. Gave up,
-#   started looking at other people's solutions.
+#   started looking at other people's solutions. (backtracking does work
+#   on the toy datasets, so there's that)
 
 # next time:
 # - try to sketch out the toy dataset and its deltas
 # - then go through seeing what happens when you remove adapters
+# - notice that delta=1 can permute, delta=2 does not exist, delta=3 HAVE to remain
 # - try to notice how the sub-solutions (windows of three adapters before the
 #   current) accumulate into the total solution
 
@@ -38,6 +40,7 @@
 # - dynamic programming, which is super fast, and is quite generic
 # - peeps recognizing that sequences of joltage difference 1 result in specific
 #   numbers of permutations for that sub-sequence
+#   - https://www.reddit.com/r/adventofcode/comments/ka9pc3/2020_day_10_part_2_suspicious_factorisation/gf969fr/
 # - tribonacci
 
 import algorithm, os, sequtils, sets, strformat, strutils, tables
