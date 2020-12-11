@@ -3,6 +3,7 @@ import algorithm, os, sequtils, sets, strformat, strutils, tables
 var seats = readFile(joinPath(getAppDir(), "input.txt")).strip().split("\n")
 let w = seats[0].len
 
+# number of directly neighbouring seats occupied
 proc numNbrsOccupied(r, c: int): int =
   result = 0
   
@@ -20,7 +21,7 @@ proc numNbrsOccupied(r, c: int): int =
         # TODO: in case of NO occupied neighbours check, you can early out here
         result += 1
 
-proc transformSeat(r, c: int): char =
+proc transformSeatPart1(r, c: int): char =
   let s = seats[r][c]
   if s == '.':
     return s
@@ -33,19 +34,19 @@ proc transformSeat(r, c: int): char =
 
   return s
 
-while true:
-  # I would expect this to be a value copy
-  var newSeats = seats
-  for r in 0..seats.len-1:
-    for c in 0..w-1:
-      newSeats[r][c] = transformSeat(r,c)
+proc doPart1(): int =
+  while true:
+    # thanks nim value semantics!
+    var newSeats = seats
+    for r in 0..seats.len-1:
+      for c in 0..w-1:
+        newSeats[r][c] = transformSeatPart1(r,c)
 
-  echo newSeats
+    if newSeats == seats:
+      break
 
-  if newSeats == seats:
-    break
+    seats = newSeats
 
-  seats = newSeats
+  result = seats.join("").count('#')
 
-var numOcc = 0
-echo seats.join("").count('#')
+assert doPart1() == 2178
