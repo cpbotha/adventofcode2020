@@ -2,16 +2,15 @@
 # copyright 2020 by Charl P. Botha <info@charlbotha.com>
 # BSD 3-clause thanks
 
-import algorithm, math, os, sequtils, sets, strformat, strutils, tables
+import math, os, strutils, tables
 
 var instructions = readFile(joinPath(getAppDir(), "input.txt")).strip().split("\n")
-
-# ship starts pointing E i.e. (1,0)
-# consider as cartesian grid, W to E is negX to posX, S to N is negY to posY
 
 let
   hToC = {'N': [0,1], 'S': [0,-1], 'E': [1,0], 'W': [-1,0]}.toTable
 
+# ship starts pointing E i.e. (1,0)
+# consider as cartesian grid, W to E is negX to posX, S to N is negY to posY
 proc doPart1(): int =
   var 
     curDir = [1,0]
@@ -39,9 +38,9 @@ proc doPart1(): int =
 
   result = abs(curPos[0]) + abs(curPos[1])
 
-# 923
-echo doPart1()
+echo doPart1() == 923
 
+# encode waypoint position as relative to the ship
 proc doPart2(): int =
   var 
     curPosS = [0,0]
@@ -62,9 +61,12 @@ proc doPart2(): int =
       let ar = degToRad(if o == 'R': -1*float(v) else: float(v))
       let newdx = float(curPosW[0]) * cos(ar) - float(curPosW[1]) * sin(ar)
       let newdy = float(curPosW[0]) * sin(ar) + float(curPosW[1]) * cos(ar)
-      curPosW[0] = int(newdx)
-      curPosW[1] = int(newdy)
+      # haha of course the round() here was necessary, else floats like 34.999999 will throw you
+      curPosW[0] = int(round(newdx))
+      curPosW[1] = int(round(newdy))
+
     else:
+      # N,S,E,W -- move waypoint relative to s hip
       let instDir = hToC[o]
       curPosW[0] += v * instDir[0]
       curPosW[1] += v * instDir[1]
@@ -72,4 +74,5 @@ proc doPart2(): int =
   result = abs(curPosS[0]) + abs(curPosS[1])
 
 # 29188 too high
-echo doPart2()
+assert doPart2() == 24769
+
