@@ -39,5 +39,37 @@ proc doPart1(): int =
 
   result = abs(curPos[0]) + abs(curPos[1])
 
-assert doPart1() == 923
+# 923
+echo doPart1()
 
+proc doPart2(): int =
+  var 
+    curPosS = [0,0]
+    # always relative to ship!
+    curPosW = [10,1]
+
+  for i in instructions:
+    let o = i[0]
+    let v = parseInt(i[1..^1])
+    if o == 'F':
+      # move ship in direction of waypoint x times
+      curPosS[0] += v * curPosW[0]
+      curPosS[1] += v * curPosW[1]
+
+    elif o in ['L','R']:
+      # do full rotation calc, will work for arbitrary angles
+      # "rotates points in the xy-plane counterclockwise through an angle θ with respect to the x axis"
+      let ar = degToRad(if o == 'R': -1*float(v) else: float(v))
+      let newdx = float(curPosW[0]) * cos(ar) - float(curPosW[1]) * sin(ar)
+      let newdy = float(curPosW[0]) * sin(ar) + float(curPosW[1]) * cos(ar)
+      curPosW[0] = int(newdx)
+      curPosW[1] = int(newdy)
+    else:
+      let instDir = hToC[o]
+      curPosW[0] += v * instDir[0]
+      curPosW[1] += v * instDir[1]
+
+  result = abs(curPosS[0]) + abs(curPosS[1])
+
+# 29188 too high
+echo doPart2()
