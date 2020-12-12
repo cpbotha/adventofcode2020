@@ -73,6 +73,5 @@ proc doPart2(): int =
 
   result = abs(curPosS[0]) + abs(curPosS[1])
 
-# 29188 too high
 assert doPart2() == 24769
 
