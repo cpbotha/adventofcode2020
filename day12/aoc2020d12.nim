@@ -2,6 +2,15 @@
 # copyright 2020 by Charl P. Botha <info@charlbotha.com>
 # BSD 3-clause thanks
 
+# random nim newbie notes:
+# - could have used 90,180,270 rotation lookup table but instead implemented
+#   rotation matrix in p1. I am happier this way, would work for more.
+# - https://github.com/unicredit/neo and/or
+#   https://github.com/mratsim/Arraymancer for more serious LA / matrix support
+#   in nim
+# - thanks to rotation matrix, floating point rounding issue almost got me in
+#   part 2.
+
 import math, os, strutils, tables
 
 var instructions = readFile(joinPath(getAppDir(), "input.txt")).strip().split("\n")
