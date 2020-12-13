@@ -41,10 +41,25 @@ assert offsets[0] == 0
 # you can start at timestamp 100_000_000_000_000
 proc doPart2(): int64 =
   var
-    # test_input
     t = 100_000_000_000_000
-    #t = 1261400
+    # test_input
+    #t = 1261410
     valid = false
+
+  # find the largest bus number (in my case 601)
+  let maxBus = buses2.max()
+  let maxOffs = buses2.maxIndex()
+
+  echo maxBus, " ", maxOffs
+
+  # starting from the given startoffset, find first t+largestBusOffset that's divisible by largest bus
+  # that t is our starting point
+  var startFound = false
+  while not startFound:
+    if (t + maxOffs) mod maxBus == 0:
+      startFound = true
+    else:
+      t += 1
 
   while not valid:
     valid = true
@@ -54,12 +69,13 @@ proc doPart2(): int64 =
         valid = false
         # don't do any more checking
         break
-    t += 1
+    # wo go in jumps of maxBus, because nothing else will be divisible by maxBus
+    t += maxBus
 
     if t mod 1_000_000 == 0:
       echo t
 
-  result = t-1
+  result = t - maxBus
 
 echo doPart2()
 #echo buses2
