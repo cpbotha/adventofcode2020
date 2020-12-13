@@ -1,10 +1,14 @@
 # gave up on part 2 after 1.5 hours
 
 # from reddit it looks like when you have modular problems like this, bust out Chinese Remainder Theorem
+# in this case, was more straight-forward to notice prime numbers, then multiple them incrementally
+# together for new step as you find more buses that work
 
 # a ≡ b (mod n)
 # means a and b are congruent modulo n
 # a - b is divisible by n
+# our problem is specified as a + b is divisible by n
+# in theory should negate the residuals then plug into CRT
 
 # also:
 # https://www.reddit.com/r/adventofcode/comments/kc4njx/2020_day_13_solutions/gfncyoc/
@@ -24,7 +28,7 @@
 import math, os, sequtils, strutils, tables
 
 let 
-  lines = readFile(joinPath(getAppDir(), "test_input_3.txt")).strip().split("\n")
+  lines = readFile(joinPath(getAppDir(), "input.txt")).strip().split("\n")
   mytime = parseInt lines[0]
   busesStr = lines[1]
 
@@ -148,9 +152,39 @@ proc doPart2Primes(): int64 =
 
   result = t
 
-echo doPart2Primes()
+echo "primes ", doPart2Primes()
 
-# 751403460099100 is too high
+
+proc mulInv(a0, b0: int): int =
+  var (a, b, x0) = (a0, b0, 0)
+  result = 1
+  if b == 1: return
+  while a > 1:
+    let q = a div b
+    a = a mod b
+    swap a, b
+    result = result - q * x0
+    swap x0, result
+  if result < 0: result += b0
+ 
+# from https://rosettacode.org/wiki/Chinese_remainder_theorem#Nim
+# n should be divisors, a should be residuals
+# for residuals, pass (bus - offset) because:
+# (t + offs) mod bus == 0 :means
+# t - (bus - offset) mod bus = 0 :means
+# t ≡ (bus - offset) (mod bus)
+# which is of the form: x ≡ a (mod n)
+proc chineseRemainder[T](n, a: T): int =
+  var prod = 1
+  var sum = 0
+  for x in n: prod *= x
+ 
+  for i in 0..<n.len:
+    let p = prod div n[i]
+    sum += a[i] * mulInv(p, n[i]) * p
+ 
+  sum mod prod
+
 # 379_786_358_533_423 is correct
-#echo chineseRemainder(buses2, offsets)
+echo "CRT ", chineseRemainder(buses2, zip(offsets, buses2).mapIt(it[1] - it[0]))
 
