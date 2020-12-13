@@ -1,7 +1,30 @@
+# gave up on part 2 after 1.5 hours
+
+# from reddit it looks like when you have modular problems like this, bust out Chinese Remainder Theorem
+
+# a ≡ b (mod n)
+# means a and b are congruent modulo n
+# a - b is divisible by n
+
+# also:
+# https://www.reddit.com/r/adventofcode/comments/kc4njx/2020_day_13_solutions/gfncyoc/
+# The trick with part 2 was to quickly recognise that you could iterate over the
+# numbers with a larger step value than 1. Once you find a satisfying value for
+# each bus, you can then make the step value be the lowest common multiple of
+# its current value and that bus. Fortunately the bus numbers were all mutually
+# prime, so we didn't need to implement lowest common multiple and could simply
+# multiply the step value.
+
+# in other words:
+# start from t until you find a t that satisfies the first bus, i.e. t mod bus == offset
+# set step = found_bus
+# when you find next bus, set step = found_buses.foldl(a*b)
+# if the bus numbers were not prime, would have had to use LCM of found buses, or LCM of current step and new bus
+
 import math, os, sequtils, strutils, tables
 
 let 
-  lines = readFile(joinPath(getAppDir(), "input.txt")).strip().split("\n")
+  lines = readFile(joinPath(getAppDir(), "test_input_3.txt")).strip().split("\n")
   mytime = parseInt lines[0]
   busesStr = lines[1]
 
@@ -38,7 +61,8 @@ assert buses == buses2
 assert offsets[0] == 0
 
 
-
+# after 30 minutes with -d:danger, doPart2() below had reached 235_419_091_000_000
+# with probably about 20 minutes more, it would have reached my answer!
 # ignore mytime (line 1 of input)
 # you can start at timestamp 100_000_000_000_000
 proc doPart2(): int64 =
@@ -87,6 +111,46 @@ proc doPart2(): int64 =
 
   result = t - maxBus
 
-echo doPart2()
+#echo doPart2()
 #echo buses2
 #echo offsets
+
+# system of equations:
+# t mod n0 = a0
+# t mod n1 = a1
+# ...
+# where n0..nk are co-prime
+
+echo buses2
+echo offsets
+
+proc doPart2Primes(): int64 =
+  var
+    #t = 100_000_000_000_000
+    # test_input
+    #t = 1161476
+    # test_input_3
+    t = 1_202_161_486 #(answer is 1_202_161_486)
+
+  var step = 1
+  for bi in 0..buses2.len-1:
+    while true:
+      if t == 1_202_161_486:
+        echo bi, buses2
+      #  return -1
+      if (t + offsets[bi]) mod buses2[bi] == 0:
+        # we've found the first t where this new bus can also work, so increment step
+        step *= buses2[bi]
+        # break out of while, so we can start with next bus
+        break
+      else:
+        t += step
+
+  result = t
+
+echo doPart2Primes()
+
+# 751403460099100 is too high
+# 379_786_358_533_423 is correct
+#echo chineseRemainder(buses2, offsets)
+
