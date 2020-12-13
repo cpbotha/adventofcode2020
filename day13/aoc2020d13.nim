@@ -37,19 +37,27 @@ assert buses == buses2
 # ensure that 0-offset (first) slot has a bus
 assert offsets[0] == 0
 
+
+
 # ignore mytime (line 1 of input)
 # you can start at timestamp 100_000_000_000_000
 proc doPart2(): int64 =
   var
     t = 100_000_000_000_000
     # test_input
-    #t = 1261410
+    #t = 1161476
+    # test_input_3
+    #t = 1_102_161_486 #(answer is 1202161486)
     valid = false
 
   # find the largest bus number (in my case 601)
   let maxBus = buses2.max()
-  let maxOffs = buses2.maxIndex()
+  # this cost me some time: using maxIndex() directly, instead of looking up in offsets
+  let maxOffs = offsets[buses2.maxIndex()]
 
+  #assert 100000000000245 + 37 mod 601 == 0
+
+  echo buses2
   echo maxBus, " ", maxOffs
 
   # starting from the given startoffset, find first t+largestBusOffset that's divisible by largest bus
@@ -60,6 +68,8 @@ proc doPart2(): int64 =
       startFound = true
     else:
       t += 1
+
+  echo "starting from ", t
 
   while not valid:
     valid = true
