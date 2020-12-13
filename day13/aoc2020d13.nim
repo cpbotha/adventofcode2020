@@ -1,14 +1,12 @@
+# AoC 2020 day 13 solution
+# copyright 2020 by Charl P. Botha <info@charlbotha.com>
+# BSD 3-clause thanks
+
 # gave up on part 2 after 1.5 hours
 
 # from reddit it looks like when you have modular problems like this, bust out Chinese Remainder Theorem
-# in this case, was more straight-forward to notice prime numbers, then multiple them incrementally
+# in this case, was even more straight-forward to notice prime numbers, then multiply them incrementally
 # together for new step as you find more buses that work
-
-# a ≡ b (mod n)
-# means a and b are congruent modulo n
-# a - b is divisible by n
-# our problem is specified as a + b is divisible by n
-# in theory should negate the residuals then plug into CRT
 
 # also:
 # https://www.reddit.com/r/adventofcode/comments/kc4njx/2020_day_13_solutions/gfncyoc/
@@ -166,7 +164,12 @@ proc mulInv(a0, b0: int): int =
     result = result - q * x0
     swap x0, result
   if result < 0: result += b0
- 
+
+# congruence equations: 
+# a ≡ b (mod n)
+# means a and b are congruent modulo n
+# i.e. a - b is divisible by n
+
 # from https://rosettacode.org/wiki/Chinese_remainder_theorem#Nim
 # n should be divisors, a should be residuals
 # for residuals, pass (bus - offset) because:
