@@ -36,6 +36,8 @@ proc doPart1(): int =
 
 assert doPart1() == 17028179706934
 
+# maximum number of X bits == 9 in my input set
+# this solution is instantaneous
 # 0 -> addrress bit unchanged
 # 1 -> address bit overwritten with 1
 # X - > address bit floating
@@ -69,14 +71,14 @@ proc doPart2(): int =
       if scanf(l, "$w[$i] = $i", dummy, ad, val):
         # switch on the 1 bits
         ad = bitor(ad, curOrMask)
+        # then convert to 36 character wide bit string
         adStr = &"{ad:036b}"
 
-        # now iterate through all of the float combos
+        # now iterate through all of the float combos to get float bit permutations
         for i in 0..int(pow(2.0,float(floatOffsets.len)))-1:
           # convert current permutation to binary string in fstr
-          #let fstr1 = &" what why???! {i}:b" <--- doh.
-          var fstr: string
-          formatValue(fstr, i, "b")
+          var fstr = &"{i:b}"
+          # leftpad 0 so it's as long as the full floatOffsets, so floatOffsets lookup will work
           fstr = align(fstr, floatOffsets.len, padding='0')
 
           for bidx, fb in fstr:
@@ -84,10 +86,9 @@ proc doPart2(): int =
 
           ad = parseBinInt(adStr)
           # now store at this modified address
-          #echo floatOffsets
-          #echo "addr: ", ad, " ", adStr, " maskstr ", curMaskStr
           mem[ad] = val
 
+  # sum up all of the values
   result = toSeq(mem.values).foldl(a+b)
 
 assert doPart2() == 3683236147222
