@@ -3,10 +3,19 @@
 # BSD 3-clause thanks
 
 # - here I just bit-twiddled everything
-# - it was useful before the time seeing what the maximum number of X-floating bits were beforehand
+# - it was useful before the time seeing what the maximum number of X-floating bits were beforehand (9 in my case)
 # - some of the more elegant part 2 solutions would iterate through the mask, if run into X,
 #   pop off stack, add two addresses with that X 0 and 1, then handle those two addresses, and so on.
-#   this would end with stack of alternative addresses
+#   this would end with stack of alternative addresses, see below example by Gert @ zatech:
+
+# def enumerate_addresses(address: str) -> List[int]:
+#     addresses = [address]
+#     results = []    while addresses:
+#         address = addresses.pop(0)        if 'X' in address:
+#             addresses.append(address.replace('X', '0', 1))
+#             addresses.append(address.replace('X', '1', 1))
+#         else:
+#             results.append(address)    return sorted([int(r, 2) for r in results])
 
 import bitops, math, os, parseUtils, sequtils, strformat, strscans, strutils, tables
 
