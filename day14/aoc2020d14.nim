@@ -20,10 +20,10 @@ proc doPart1(): int =
     if l.startsWith("mask"):
       curMaskStr = l["mask = ".len..^1]
       # use curAndMask to switch off bits
-      let sa = cast[string](curMaskStr.mapIt(if it == '0': '0' else: '1'))
+      let sa = curMaskStr.mapIt(if it == '0': '0' else: '1').join()
       curAndMask = parseBinInt(sa)
       # curOrMask to switch on bits
-      let so = cast[string](curMaskStr.mapIt(if it == '1': '1' else: '0'))
+      let so = curMaskStr.mapIt(if it == '1': '1' else: '0').join()
       curOrMask = parseBinInt(so)
 
     else:
