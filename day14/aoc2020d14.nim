@@ -2,6 +2,12 @@
 # copyright 2020 by Charl P. Botha <info@charlbotha.com>
 # BSD 3-clause thanks
 
+# - here I just bit-twiddled everything
+# - it was useful before the time seeing what the maximum number of X-floating bits were beforehand
+# - some of the more elegant part 2 solutions would iterate through the mask, if run into X,
+#   pop off stack, add two addresses with that X 0 and 1, then handle those two addresses, and so on.
+#   this would end with stack of alternative addresses
+
 import bitops, math, os, parseUtils, sequtils, strformat, strscans, strutils, tables
 
 var instructions = readFile(joinPath(getAppDir(), "input.txt")).strip().split("\n")
