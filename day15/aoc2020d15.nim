@@ -3,6 +3,7 @@
 # BSD 3-clause thanks
 
 # for part 1, solution was already pretty efficient by only storing last occurrence of each number
+# also important to have while loop +2 ahead of memory table, and +1 ahead of last uttered number
 # for part 2, only increased n to 30M: solution found in 1.26 us (-d:release -d:danger --gc:orc)
 
 import sequtils, tables, times
