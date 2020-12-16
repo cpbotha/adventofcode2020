@@ -4,6 +4,11 @@
 
 # gave up on part 2 after 1.5 hours
 
+# the code below contains three solutions for part 2
+# - my partial bruteforce, which would in theory have found solution in under an hour
+# - the growing product of primes solution
+# - the chinese remainder theorem solution, with explanation of congruence equations
+
 # from reddit it looks like when you have modular problems like this, bust out Chinese Remainder Theorem
 # in this case, was even more straight-forward to notice prime numbers, then multiply them incrementally
 # together for new step as you find more buses that work
