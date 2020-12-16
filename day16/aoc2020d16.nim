@@ -1,8 +1,19 @@
+# AoC 2020 day 16 solution
+# copyright 2020 by Charl P. Botha <info@charlbotha.com>
+# BSD 3-clause thanks
+
 # part 1 plan ===
 # merge all valid intervals into combined valid interval(s)
 # looking at the data, this could be trivial
 # sorted, all of them have small gap in the middle, looks like gaps are covered by other intervals
 # (yes, this turned out to be true)
+
+# part 2 ===
+# the solution formed as I was writing code
+# made a misstep counting all of the valid intervals per field
+# then realized I could rather just store a set containing for each field for which intervals it's valid for all examples
+# then inspected those sets and was happy to see at least one with only one acceptable interval
+# incrementally build on those known fields
 
 import os, re, sequtils, sets, strformat, strscans, strutils, tables
 
