@@ -61,6 +61,7 @@ proc doPart1(): int =
     let invalidNumsTotal = ticketNums.filterIt(it < min0g or it > max1g).foldl(a+b, 0)
     # tally up for part1
     totalInvalid += invalidNumsTotal
+    # keep track of all of the valid tickets
     if invalidNumsTotal == 0:
       validTickets.add(ticketNums)
 
