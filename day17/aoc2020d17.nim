@@ -1,10 +1,43 @@
-# part 1 plan:
+# AoC 2020 day 17 solution
+# copyright 2020 by Charl P. Botha <info@charlbotha.com>
+# BSD 3-clause thanks
+
+# part 1 plan =====
 # only record active cubes in hashset by their coordinates
 # pretty happy that my first implementation of this worked the first time!
-# part 2:
+# part 2 =====
 # copy pasted some code, added a "w" in everywhere and Bob was again my uncle.
 
-import os, re, sequtils, sets, strformat, strscans, strutils, tables
+# General notes by a nim newbie:
+# - It's really great that the built-in nim tuple is named; this together
+#   with nim's type checking really helped to code up a working solution.
+# - Coming from a 3D visualization background and having nim available, my
+#   first thinking was to model this as an actual voxel grid. Fortunately
+#   already corrected this in the thinking stage to a set *only* containing
+#   the active coordinates.
+# - the x,y,z symbolics helped me during writing this, but to make it
+#   generic for N dimensions, one would write code to spit out a seq
+#   with neighbour indices, and then follow the same logic. See e.g.
+#   https://github.com/victorkirov/advent-of-code-2020/blob/master/2020/17/solution.py
+#   - I have to resist the temptation to do this now.
+
+#[
+  Here is Keegan Carruther-Smith's commented Python to generate neighbour indices:
+
+  def neigh(p):
+    return (
+      # p + dp
+      tuple(a + b for a, b in zip(p, dp))
+      # (-1, 0, 1) ** len(p)
+      for dp in itertools.product(*[range(-1, 2)]*len(p))
+      # Exclude (0, ..., 0)
+      if any(a != 0 for a in dp))
+
+  nim's algorithms module has "product"
+
+]#
+
+import os, sets, strutils
 
 let inputLines = readFile(joinPath(getAppDir(), "input.txt")).strip().split("\n")
 
