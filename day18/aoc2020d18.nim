@@ -88,7 +88,7 @@ proc evalEqn(eqn: string, startidx: int = 0): (int, int) =
 # adapted from the C code at https://en.wikipedia.org/wiki/Operator-precedence_parser#Alternative_methods
 # flipped rule for + and *
 # also one fewer paren required than in the C code for some or other reason
-proc convertEqnWithParens(eqn: string): string =
+proc convertEqnWithParensLikeC(eqn: string): string =
   result = "((("
   for i,c in eqn:
     case c
@@ -110,6 +110,13 @@ proc convertEqnWithParens(eqn: string): string =
       result &= c
 
   result &= ")))"
+
+# of course nim does not have to look like C, can also do it more compactly:
+proc convertEqnWithParens(eqn: string): string =
+  result = "(((" & 
+  eqn.replace("(", "(((").replace(")", ")))").replace("+", ")+(").replace("*", "))*((") &
+  ")))"
+
 
 proc doPart1(): int =
   eqns.mapIt(evalEqn(it)[0]).foldl(a+b)
