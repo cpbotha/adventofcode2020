@@ -86,33 +86,35 @@ proc evalEqn(eqn: string, startidx: int = 0): (int, int) =
   result = (acc, i)
     
 # adapted from the C code at https://en.wikipedia.org/wiki/Operator-precedence_parser#Alternative_methods
+# flipped rule for + and *
+# also one fewer paren required than in the C code for some or other reason
 proc convertEqnWithParens(eqn: string): string =
-  result = "(((("
+  result = "((("
   for i,c in eqn:
     case c
     of '(':
-      result &= "(((("
+      result &= "((("
       continue
     of ')':
-      result &= "))))"
+      result &= ")))"
       continue
     of '+':
       # we rewrite + in the same way the published algo rewrites *, because
       # we want it to take precedence
-      result &= ")) + (("
+      result &= ") + ("
       continue
     of '*':
-      result &= "))) * ((("
+      result &= ")) * (("
       continue
     else:
       result &= c
 
-  result &= "))))"
+  result &= ")))"
 
 proc doPart1(): int =
   eqns.mapIt(evalEqn(it)[0]).foldl(a+b)
 
-echo doPart1() == 45840336521334
+assert doPart1() == 45840336521334
 
 proc doPart2(): int =
   eqns.mapIt( evalEqn(convertEqnWithParens(it))[0] ).foldl(a+b)
