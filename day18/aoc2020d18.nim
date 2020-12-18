@@ -12,6 +12,30 @@
 # ex4: rewrite equation with parentheses, see https://en.wikipedia.org/wiki/Operator-precedence_parser#Alternative_methods
 # I ended up getting ex4 to work by swapping rewrite rule for * and +. :D
 
+#[
+  see this compact solution by Keegan Carruthers-Smith in Python
+  https://github.com/keegancsmith/advent/blob/master/2020/18/18.py#L19-L35
+  "transform the string until there are no sub-expressions"
+
+  def evalB(expr):
+    while ')' in expr:
+        r = expr.index(')')
+        l = expr.rindex('(', 0, r)
+        expr = expr[:l] + evalB(expr[l+1:r]) + expr[r+1:]
+    tokens = expr.split()
+    while '+' in tokens:
+        i = tokens.index('+')
+        x, y = tokens[i-1], tokens[i+1]
+        v = int(x) + int(y)
+        tokens = tokens[:i-1] + [str(v)] + tokens[i+2:]
+    while len(tokens) > 1:
+        x, op, y = tokens[:3]
+        assert op == '*'
+        v = int(x) * int(y)
+        tokens = [str(v)] + tokens[3:]
+    return tokens[0]
+]#
+
 import os, re, sets, sequtils, strformat, strutils
 
 let eqns = readFile(joinPath(getAppDir(), "input.txt")).strip().split("\n")
