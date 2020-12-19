@@ -84,8 +84,53 @@ proc doPart1(): int =
   let zre = re("^" & reTable["0"] & "$")
   result = sections[1].strip().splitLines().filterIt(it.match(zre)).len
 
+#assert doPart1() == 102
 echo doPart1()
 
-#echo ord('b'), " ", ord('l')
 
-#echo "90 90 | 132 128".split(" ").mapIt(if it == "|": '/' else: 'a').join()
+proc doPart2(): int =
+
+  # rule 0 consists of 8 and 11, the two rules that are being changed
+
+  #reTable["42"] = reTable["42"] & "+"
+  #reTable["31"] = reTable["31"] & "+"
+
+  reTable.clear()
+  var inputRules = extractInputRules()
+
+  # scan repeatedly through input rules
+  # until rule 0 is finalised with substitutions
+  while "0" in inputRules:
+    var toDelete = newSeq[string]()
+    for ir_num, ir_seq in inputRules:
+
+      # replace all tokens in input rule with final values that might exist in reTable
+      # this means that a token in newSeq can be a string of characters starting with a or b
+      let newSeq = ir_seq.mapIt(reTable.getOrDefault(it, it))
+
+      if newSeq != ir_seq:
+        # this means we have replaced stuff!
+        # check if new rule is complete: only a, b, |
+        if newSeq.allIt(it.startsWith("(") or it.startsWith("a") or it.startsWith("b") or it == "|"):
+          # store in final reTable as a complete string
+          reTable[ir_num] = maybeParens(newSeq.join())
+          if ir_num == "31" or ir_num == "42":
+            reTable[ir_num] = reTable[ir_num] & "+"
+          # schedule removal from inputRules
+          toDelete.add(ir_num)
+          
+        else:
+          # replaced previous rule with transformed rule
+          inputRules[ir_num] = newSeq
+
+    #now remove the rules that have graduated to reTable
+    for ir_num in toDelete:
+      inputRules.del(ir_num)
+
+  # now check the messages
+  # make sure we match the whole stringa
+  let zre = re("^" & reTable["0"] & "$")
+  result = sections[1].strip().splitLines().filterIt(it.match(zre)).len
+
+# 331 is too high
+echo doPart2()
