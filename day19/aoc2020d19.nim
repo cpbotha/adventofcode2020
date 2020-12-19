@@ -15,8 +15,12 @@
 # - based on the two newly recursive rules, wrote out some examples of what would be valid
 # - looking at patterns there, it seemed changing rule 42 to 42+ (i.e. one or more) and 31 to 31+
 #   would work. This did work for the demo data, but not for the real data :(
+# - finally figured out (still by myself) that the numbers 42 31 groups have to match! First
+#   fixed by manually copying repetition groups (see below) to find right answer.
+# - much later, saw on reddit https://www.reddit.com/r/adventofcode/comments/kg1mro/2020_day_19_solutions/ggcyjgo/
+#   how to use PCRE's recursive capture groups and used that!
 
-import os, re, sequtils, sets, strformat, strscans, strutils, tables
+import os, re, sequtils, strformat, strutils, tables
 
 # 0: rules
 # 1: messages
@@ -125,10 +129,17 @@ proc doPart2(): int =
             # when I constrained the number of matches to be equal, then I could get the correct answer
             let r42 = reTable["42"]
             let r31 = reTable["31"]
-            # we enclose 42 and 31 in this case in a capturing group each so we can count them
-            #reTable[ir_num] = &"({r42})+({r31})+"
+
             # ok crying a bit again... I kept on adding equal quantifiers for the two groups until I struck 318, and then site was happy
-            reTable[ir_num] = "(?:(" & r42 & r31 & ")|(" & r42 & "{2}" & r31 & "{2})|(" & r42 & "{3}" & r31 & "{3})|(" & r42 & "{4}" & r31 & "{4})|(" & r42 & "{5}" & r31 & "{5}))"
+            #reTable[ir_num] = "(?:(" & r42 & r31 & ")|(" & r42 & "{2}" & r31 & "{2})|(" & r42 & "{3}" & r31 & "{3})|(" & r42 & "{4}" & r31 & "{4})|(" & r42 & "{5}" & r31 & "{5}))"
+
+            # WAIT!
+            # PCRE in nim DOES support recursive regular expressions
+            # in the following, we name the whole expression itself "eleven" (could be anything unique)
+            # then our existing r42, then we recurse into the whole group, then r31, 
+            # which is of course 11 = 42 11 31
+            reTable[ir_num] = &"(?<eleven>{r42}(?&eleven)?{r31})"
+
           # schedule removal from inputRules
           toDelete.add(ir_num)
           
