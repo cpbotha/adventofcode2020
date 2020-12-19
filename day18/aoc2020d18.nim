@@ -1,3 +1,8 @@
+# AoC 2020 day 18 solution
+# copyright 2020 by Charl P. Botha <info@charlbotha.com>
+# BSD 3-clause thanks
+
+
 # part 1 =========
 # started at about 7:35 SAST, done at 8:14
 # again quite chuffed that my first implementation worked the first time!
