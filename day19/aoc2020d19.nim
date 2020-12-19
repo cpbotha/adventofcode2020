@@ -15,8 +15,10 @@
 # - based on the two newly recursive rules, wrote out some examples of what would be valid
 # - looking at patterns there, it seemed changing rule 42 to 42+ (i.e. one or more) and 31 to 31+
 #   would work. This did work for the demo data, but not for the real data :(
-# - finally figured out (still by myself) that the numbers 42 31 groups have to match! First
-#   fixed by manually copying repetition groups (see below) to find right answer.
+# - first saw that you really have to treat the two subs separately:
+#   8 changes from 42 to 42+
+#   11 changes from 42 31 to 42{n} 31{n} with n > 0 and EQUAL
+# - First fixed by manually copying repetition groups (see below) to find right answer.
 # - much later, saw on reddit https://www.reddit.com/r/adventofcode/comments/kg1mro/2020_day_19_solutions/ggcyjgo/
 #   how to use PCRE's recursive capture groups and used that!
 
