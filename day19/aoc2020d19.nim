@@ -12,6 +12,9 @@
 
 # part 2 plan =====
 # - whimper
+# - based on the two newly recursive rules, wrote out some examples of what would be valid
+# - looking at patterns there, it seemed changing rule 42 to 42+ (i.e. one or more) and 31 to 31+
+#   would work. This did work for the demo data, but not for the real data :(
 
 import os, re, sequtils, sets, strformat, strscans, strutils, tables
 
