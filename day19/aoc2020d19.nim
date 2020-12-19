@@ -120,6 +120,9 @@ proc doPart2(): int =
             # rule 11 is "42 31 | 42 11 31" which means one or more 42s followed by AN EQUAL NUMBER of 31s
             # let me cry for a bit, writing a regex that balances two groups of quantifier matches is tricky:
             # https://stackoverflow.com/questions/23001137/capturing-quantifiers-and-quantifier-arithmetic
+            # I did try with just r42+r31+ (i.e. one or more of each) but then it let through too many messages
+            # with real input data (it did work with demo data)
+            # when I constrained the number of matches to be equal, then I could get the correct answer
             let r42 = reTable["42"]
             let r31 = reTable["31"]
             # we enclose 42 and 31 in this case in a capturing group each so we can count them
@@ -133,21 +136,15 @@ proc doPart2(): int =
           # replaced previous rule with transformed rule
           inputRules[ir_num] = newSeq
 
-    #now remove the rules that have graduated to reTable
+    # now remove the rules that have graduated to reTable
     for ir_num in toDelete:
       inputRules.del(ir_num)
 
   # now check the messages
   # make sure we match the whole string
   let zre = re("^" & reTable["0"] & "$")
-  #result = sections[1].strip().splitLines().filterIt(it.match(zre)).len
-  result = 0
-  for msg in sections[1].strip().splitLines():
-    var groups: array[2, string]
-    if msg.match(zre, groups):
-      result += 1
-      if groups[0].len > 0:
-        echo groups
+  result = sections[1].strip().splitLines().filterIt(it.match(zre)).len
+
 
 # 331 is too high
 # 318 correct, after manually expanding regex to support up to 5 matches of 42 and 31
